@@ -1,18 +1,12 @@
 import re
 
 # phone = 'phone_numbers.txt'
-# reference: https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch04s02.html
+# reference: https://stackoverflow.com/questions/3868753/find-phone-numbers-in-python-script
 # find all formats: 
-# match within long text: \(?\b([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})\b
-# allow leading 1s: ^(?:\+?1[-.●]?)?\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$
-# allow 7-digit numbers: ^(?:\(?([0-9]{3})\)?[-.●]?)?([0-9]{3})[-.●]?([0-9]{4})$
-# replace with format: \1●\2-\3
 
 # email = 'email.txt'
-# reference: https://help.returnpath.com/hc/en-us/articles/220560587-What-are-the-rules-for-email-address-syntax-
+# reference: https://www.tutorialspoint.com/Extracting-email-addresses-using-regular-expressions-in-Python
 # find top-level domains: .com, .net, .org, .gov
-# reference: https://emailregex.com/
-# find using solid inclusive (nothing 100%): r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
 
 # Notes from discussion with Aaron I:
 # split this into def find and def write
@@ -22,9 +16,9 @@ import re
 # consider 28 without pulling all lines in at once; consider iterating each word/char (slice)
 
 def find(in_filepath, regex, out_filepath):
+    """ function takes in an input file path, regex, output path as strings;
+        calls next function to write to the output file"""
     data_list = []
-    """ find info 
-    function that takes in an input file path and a regex as strings"""
     with open(in_filepath,'r') as input_file:
         for line in input_file.readlines():
             data = re.findall(regex, line)
@@ -32,9 +26,11 @@ def find(in_filepath, regex, out_filepath):
             # print(*data, sep = "\n")
             
         write(data_list, out_filepath)
-            
-# works with print
+
 def write(list, out_filepath):
+    """ writes data found in find as single items on a line to 
+        specified output file"""
+        
     with open(out_filepath, 'w') as output_file:
         for item in list:
             for single in item:
@@ -62,29 +58,18 @@ def write(list, out_filepath):
 if __name__ == "__main__":
     in_file = "../input/potential_contacts.txt"
     
-    # see comments at top of doc 
-    # email regex finds and prints   
+    # see comments at top of doc for regex reference
+    email regex finds and writes to the output file!! Yippee!!   
     email_regex = "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
-    output_file = "../output/emails.txt"
-    find(in_file, email_regex, output_file)
+    output_file_email = "../output/emails.txt"
+    find(in_file, email_regex, output_file_email)
     
-    # simple_phone_regex = '^(\(\d{3}\)[.-]?|\d{3}[.-]?)?\d{3}[.-]?\d{4}$'
+    # phone regex finds and writes to the output file
+    phone_regex = "(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})"
+    output_file_phone = "../output/phone_numbers.txt"
+    find(in_file, phone_regex, output_file_phone)
     
     
-    # simple find digits regex
-    # test_regex = '\d+'
-    # find(in_file, test_regex) # works
-        # call format output document function
-        
-    # # see comments at top of doc    
-    # phone_regex1 = "\(?\b([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})\b"
-    # phone_regex2 = "^(?:\+?1[-.●]?)?\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$"
-    # phone_regex3 = "^(?:\(?([0-9]{3})\)?[-.●]?)?([0-9]{3})[-.●]?([0-9]{4})$"
-    
-    # with open("../output/phone_numbers.txt", 'w+') as out_file_phone:
-    #     find_and_write(in_file, phone_regex1, out_file_phone)
-    #     find_and_write(in_file, phone_regex2, out_file_phone)
-    #     find_and_write(in_file, phone_regex3, out_file_phone)
-    #     # call format output document function
+    # call format output document function
 
  

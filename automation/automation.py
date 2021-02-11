@@ -21,28 +21,26 @@ import re
 # fn to write into the correct output file
 # consider 28 without pulling all lines in at once; consider iterating each word/char (slice)
 
-def find(in_filepath, regex):
+def find(in_filepath, regex, out_filepath):
     data_list = []
     """ find info 
     function that takes in an input file path and a regex as strings"""
-    # print(in_filepath, regex)
     with open(in_filepath,'r') as input_file:
         for line in input_file.readlines():
             data = re.findall(regex, line)
             data_list.append(data)
-        write(data_list)
+            # print(*data, sep = "\n")
+            
+        write(data_list, out_filepath)
             
 # works with print
-def write(list):
-        # print(data_list)
+def write(list, out_filepath):
+    with open(out_filepath, 'w') as output_file:
         for item in list:
-            print(*item, sep = "\n")
+            for single in item:
+                output_file.writelines(single)
+                output_file.writelines('\n')
             
-#     print(*data, sep = "\n")
-    # with open(out_filepath, 'w+') as output_file:
-    #     for item in data:
-    #         output_file.write(item)
-    #         output_file.write('\n')
 
 # def format_output_file(filepath):
 #     """ format output files (helper function that takes in a file path)
@@ -68,7 +66,7 @@ if __name__ == "__main__":
     # email regex finds and prints   
     email_regex = "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
     output_file = "../output/emails.txt"
-    find(in_file, email_regex)
+    find(in_file, email_regex, output_file)
     
     # simple_phone_regex = '^(\(\d{3}\)[.-]?|\d{3}[.-]?)?\d{3}[.-]?\d{4}$'
     

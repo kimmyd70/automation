@@ -29,43 +29,51 @@ def find(in_filepath, regex, out_filepath):
 
 def write(list, out_filepath):
     """ writes data found in find as single items on a line to 
-        specified output file"""
+        specified output file; prints length of data list to command line"""
         
     with open(out_filepath, 'w') as output_file:
+        length = str(len(list))
+        print(f'{out_filepath} is {length} records long \n')
+        
         for item in list:
             for single in item:
                 output_file.writelines(single)
                 output_file.writelines('\n')
             
 
+# def format_phone_nums(num):
+#     num = re.sub(r'(?<!\S)(\d{3})-', r'(\1) ', num) 
+
 # def format_output_file(filepath):
 #     """ format output files (helper function that takes in a file path)
 #         use for 'phone_numbers.txt' and 'email.txt' for this lab"""
-    
-#     with open(file,r) as output_file:
-#         for line in output_file.readlines()
-#             read first char
-#             sort by first char
+
+    # parse out area codes starting with 0-1  
+
+    # with open(file,r) as output_file:
+    #     for line in output_file.readlines()
+    #         first_char = line.slice(1)
+#             sort by first char             
 #             rewrite file in order
         
 #         # return formatted file    
 #         return output_file
         
-# # call formatting function
-# # put business logic into main
-# format_output_file(input_file)
 
 if __name__ == "__main__":
     in_file = "../input/potential_contacts.txt"
     
     # see comments at top of doc for regex reference
-    email regex finds and writes to the output file!! Yippee!!   
+    # email regex finds and writes to the output file!! Yippee!!   
     email_regex = "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
     output_file_email = "../output/emails.txt"
     find(in_file, email_regex, output_file_email)
     
-    # phone regex finds and writes to the output file
+    # phone regex finds and writes to the output file 
+    
+    # 7 digit numbers seem to be missing (??) and captures bad area codes
     phone_regex = "(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})"
+    
     output_file_phone = "../output/phone_numbers.txt"
     find(in_file, phone_regex, output_file_phone)
     

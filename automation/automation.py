@@ -15,7 +15,7 @@ import re
 # fn to write into the correct output file
 # consider 28 without pulling all lines in at once; consider iterating each word/char (slice)
 
-def find(in_filepath, regex, out_filepath):
+def find(in_filepath, regex, out_filepath, phone):
     """ function takes in an input file path, regex, output path as strings;
         calls next function to write to the output file"""
     data_list = []
@@ -25,24 +25,32 @@ def find(in_filepath, regex, out_filepath):
             data_list.append(data)
             # print(*data, sep = "\n")
             
-        write(data_list, out_filepath)
+        write(data_list, out_filepath, regex, phone)
 
-def write(list, out_filepath):
+def write(list, out_filepath, regex, phone):
     """ writes data found in find as single items on a line to 
-        specified output file; prints length of data list to command line"""
+        specified output file; prints length of data list to command line if desired"""
         
     with open(out_filepath, 'w') as output_file:
         length = str(len(list))
-        print(f'{out_filepath} is {length} records long \n')
+        # print(f'{out_filepath} is {length} records long \n')
         
         for item in list:
             for single in item:
-                output_file.writelines(single)
-                output_file.writelines('\n')
+                if phone:
+                    formatted_single = re.sub(regex, r'd{3}-d{3}-d{4}', single)
+                    output_file.writelines(formatted_single)
+                    output_file.writelines('\n')
+                else:
+                    output_file.writelines(single)
+                    output_file.writelines('\n')
             
 
-# def format_phone_nums(num):
-#     num = re.sub(r'(?<!\S)(\d{3})-', r'(\1) ', num) 
+def clean_phone_nums(num):
+    """ taken from code review of 'JB solution' """   
+    cleaned = num.replace("(", "")
+    cleaned = cleaned.replace(")", "-")
+    
 
 # def format_output_file(filepath):
 #     """ format output files (helper function that takes in a file path)
@@ -67,15 +75,15 @@ if __name__ == "__main__":
     # email regex finds and writes to the output file!! Yippee!!   
     email_regex = "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
     output_file_email = "../output/emails.txt"
-    find(in_file, email_regex, output_file_email)
+    find(in_file, email_regex, output_file_email, False)
     
     # phone regex finds and writes to the output file 
     
-    # 7 digit numbers seem to be missing (??) and captures bad area codes
+    # 7 digit numbers seem to be missing (??) and captures bad area codes (ok)
     phone_regex = "(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})"
     
     output_file_phone = "../output/phone_numbers.txt"
-    find(in_file, phone_regex, output_file_phone)
+    find(in_file, phone_regex, output_file_phone, True)
     
     
     # call format output document function
